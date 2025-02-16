@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gym_kit/platform_button.dart';
 import 'firebase_options.dart';
+import 'dart:io' show Platform;
+import 'platform_scaffold.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,20 +17,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gym Tracker',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
-      home: AuthScreen(),
-    );
+    return Platform.isIOS
+        ? CupertinoApp(
+          title: 'Gym Tracker',
+          theme: CupertinoThemeData(brightness: Brightness.light),
+          home: AuthScreen(),
+        )
+        : MaterialApp(
+          title: 'Gym Tracker',
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: ThemeMode.system,
+          home: AuthScreen(),
+        );
   }
 }
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
-
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> _signInAnonymously() async {
     try {
@@ -38,12 +46,35 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Gym Tracker")),
+    return PlatformScaffold(
+      title: Text("Gym Tracker"),
       body: Center(
-        child: ElevatedButton(
-          onPressed: _signInAnonymously,
-          child: Text("Sign in anonymously"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            PlatformButton(
+              onPressed: _signInAnonymously,
+              child: Text("Sign in anonymously"),
+            ),
+            PlatformButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => WorkoutScreen()),
+                );
+              },
+              child: Text("Go to Workouts"),
+            ),
+            PlatformButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => AIPlanScreen()),
+                );
+              },
+              child: Text("Go to AI Plan Generator"),
+            ),
+          ],
         ),
       ),
     );
@@ -55,8 +86,8 @@ class WorkoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Workouts")),
+    return PlatformScaffold(
+      title: Text("Workouts"),
       body: Center(child: Text("Workout Routines")),
     );
   }
@@ -67,8 +98,8 @@ class AIPlanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("AI Plan Generator")),
+    return PlatformScaffold(
+      title: Text("AI Plan Generator"),
       body: Center(child: Text("AI-generated workout plan coming soon!")),
     );
   }

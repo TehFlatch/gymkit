@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '449171260145',
     projectId: 'gymkit-f1942',
     storageBucket: 'gymkit-f1942.firebasestorage.app',
-    iosBundleId: 'com.example.gymKit',
+    iosBundleId: 'com.tehflatch.gymkit',
   );
 }
